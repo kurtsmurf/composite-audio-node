@@ -1,0 +1,20 @@
+<head>
+  <title>composite audio node</title>
+</head>
+<script type="module">
+  import { MyCompositeNode } from "./MyCompositeAudioNode.js";
+
+  document.documentElement.addEventListener("click", function () {
+    const context = new AudioContext();
+    const myCompNode = new MyCompositeNode(context);
+    const oscNode = new OscillatorNode(context, {
+      gain: 0.25,
+    });
+
+    oscNode.connect(myCompNode);
+    myCompNode.connect(context.destination);
+
+    oscNode.start();
+    oscNode.stop(1.0);
+  });
+</script>
