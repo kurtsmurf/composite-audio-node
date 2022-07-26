@@ -1,20 +1,39 @@
 <head>
   <title>composite audio node</title>
 </head>
+
+<html>
+  <progress value="0" />
+</html>
+
 <script type="module">
-  import { MyCompositeNode } from "./MyCompositeAudioNode.js";
+  import { PlaybackPositionNode } from "./PlaybackPositionNode.js";
 
-  document.documentElement.addEventListener("click", function () {
-    const context = new AudioContext();
-    const myCompNode = new MyCompositeNode(context);
-    const oscNode = new OscillatorNode(context, {
-      gain: 0.25,
-    });
+  const context = new AudioContext();
 
-    oscNode.connect(myCompNode);
-    myCompNode.connect(context.destination);
+  const start = function () {
+    document.documentElement.removeEventListener('click', start)
 
-    oscNode.start();
-    oscNode.stop(1.0);
-  });
+    fetch("./sound.wav")
+      .then((response) => response.arrayBuffer())
+      .then((arrayBuffer) => context.decodeAudioData(arrayBuffer))
+      .then((audioBuffer) => {
+
+        const playbackPositionNode = new PlaybackPositionNode(context);
+        playbackPositionNode.connect(context.destination);
+        playbackPositionNode.buffer = audioBuffer;
+        playbackPositionNode.bufferSource.loop = true;
+        playbackPositionNode.bufferSource.playbackRate.value = 0.2;
+        playbackPositionNode.bufferSource.start();
+
+        const tick = () => {
+          document.querySelector('progress').value = playbackPositionNode.playbackPosition;
+          requestAnimationFrame(tick)
+        }
+
+        tick();
+      })
+  }
+
+  document.documentElement.addEventListener("click", start);
 </script>

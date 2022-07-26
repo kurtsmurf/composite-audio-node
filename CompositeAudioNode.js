@@ -12,7 +12,7 @@ export class CompositeAudioNode {
   }
 
   disconnect(...args) {
-    this._output.disconnect.apply(this._output, ...args);
+    this._output.disconnect.apply(this._output, args);
   }
 }
 
