@@ -7,7 +7,7 @@
 </html>
 
 <script type="module">
-  import { PlaybackPositionNode } from "./PlaybackPositionNode.js";
+  import { PlaybackPositionNode } from "./pbagain.js";
 
   const context = new AudioContext();
 
@@ -22,9 +22,9 @@
         const playbackPositionNode = new PlaybackPositionNode(context);
         playbackPositionNode.connect(context.destination);
         playbackPositionNode.buffer = audioBuffer;
-        playbackPositionNode.bufferSource.loop = true;
-        playbackPositionNode.bufferSource.playbackRate.value = 0.2;
-        playbackPositionNode.bufferSource.start();
+        playbackPositionNode.loop = true;
+        playbackPositionNode.playbackRate.value = 0.2;
+        playbackPositionNode.start();
 
         const tick = () => {
           document.querySelector('progress').value = playbackPositionNode.playbackPosition;
